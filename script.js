@@ -27,10 +27,7 @@ canvas.addEventListener("mousemove", (e) => {
   mouse.x = e.x
   mouse.y = e.y
   // draw()
-  // particlesArray.push(new Particle()) // add particles on mouse move
-  for(let i = 0; i < 10; i++){ 
-    particlesArray.push(new Particle()) // on click add 20 particles
-  }
+  particlesArray.push(new Particle()) // add particles on mouse move
 })
 
 class Particle{
@@ -59,6 +56,22 @@ function handleParticles(){
   for(let i = 0; i < particlesArray.length; i++){
     particlesArray[i].update()
     particlesArray[i].draw()
+    for(let j = i; j < particlesArray.length; j++){
+      // pythagorean theorem--------------------- 
+      // angle is 90 deg
+      const dx = particlesArray[i].x - particlesArray[j].x
+      const dy = particlesArray[i].y - particlesArray[j].y
+      // hypothenuse
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      if(distance < 100){
+        ctx.beginPath()
+        ctx.strokeStyle = particlesArray[i].color
+        ctx.lineWidth = .2
+        ctx.moveTo(particlesArray[i].x, particlesArray[i].y)
+        ctx.lineTo(particlesArray[j].x, particlesArray[j].y)
+        ctx.stroke()
+      }
+    }
     if(particlesArray[i].size <= 0.3){ // if size is bigger than .3 remove one element
       particlesArray.splice(i, 1)
       console.log(particlesArray.length);
@@ -71,7 +84,7 @@ function animate(){
   ctx.clearRect(0, 0, canvas.width, canvas.height) // clear the canvas on every draw
   // ctx.fillStyle = "rgba(0,0,0,.1)" // add trails to particles
   // ctx.fillRect(0,0,canvas.width, canvas.height)
-  hue++
+  hue+=2
   handleParticles()
   requestAnimationFrame(animate) //calls function we pass in - creates a loop
 }
